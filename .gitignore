@@ -1,0 +1,7 @@
+data-2022
+__pycache__
+.venv
+freq-velo.csv
+moyenne-vald-arret-jour.csv
+historique_stations.csv
+.vscode
