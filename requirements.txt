@@ -5,5 +5,4 @@ seaborn
 matplotlib
 millify
 requests
-urllib
 geopy
