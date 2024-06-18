@@ -7,14 +7,16 @@ import urllib.parse
 import pickle
 import geopy.distance
 from utils import *
+import pathlib
 
 df_validations, df_nb_validations = load_data_validations()
 df_realtime_velib = load_data_velib()
 
 @st.cache_data
 def get_model():
-    model = pickle.load(open('../model.pkl', 'rb'))
-    preprocessor = pickle.load(open('../preprocessor.pkl', 'rb'))
+    print(__file__)
+    model = pickle.load(open(f'{pathlib.Path(__file__).parent.resolve()}/../model.pkl', 'rb'))
+    preprocessor = pickle.load(open(f'{pathlib.Path(__file__).parent.resolve()}/../preprocessor.pkl', 'rb'))
 
     return model, preprocessor
 
