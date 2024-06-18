@@ -14,7 +14,6 @@ df_realtime_velib = load_data_velib()
 
 @st.cache_data
 def get_model():
-    print(__file__)
     model = pickle.load(open(f'{pathlib.Path(__file__).parent.resolve()}/../model.pkl', 'rb'))
     preprocessor = pickle.load(open(f'{pathlib.Path(__file__).parent.resolve()}/../preprocessor.pkl', 'rb'))
 

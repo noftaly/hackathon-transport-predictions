@@ -6,3 +6,4 @@ matplotlib
 millify
 requests
 geopy
+scikit-learn
