@@ -44,6 +44,8 @@ with st.form('address'):
     col1, col2 = st.columns(2)
     address = col1.text_input("Donnez votre adresse")
     zipcode = col2.text_input("Donnez votre code postal")
+    chosen_hour = st.select_slider("Dans combien d'heures partez-vous ?", options=range(0, 10))
+
     submit = st.form_submit_button('Rechercher')
 
 if submit:
@@ -104,8 +106,6 @@ if submit:
         fig.update_traces(marker=dict(size=12))
 
         st.plotly_chart(fig)
-
-        chosen_hour = st.select_slider("Dans combien d'heures partez-vous ?", options=range(0, 10))
 
         current_hour = datetime.datetime.now().hour
         target_hour = (current_hour + chosen_hour) % 24
