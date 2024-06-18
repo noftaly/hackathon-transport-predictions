@@ -59,22 +59,21 @@ if submit:
         st.write(f"Votre position: {user_pos['formatted']}")
 
         with st.spinner('Calcul...'):
-            SEARCH_RADIUS = 0.005
+            SEARCH_RADIUS = 0.05
 
             df_validations_user = df_validations.copy()
             # Keep only values within ±SEARCH_RADIUS latitude/longitude
             df_validations_user = df_validations_user[(df_validations_user['LATITUDE'] >= user_pos['lat'] - SEARCH_RADIUS) & (df_validations_user['LATITUDE'] <= user_pos['lat'] + SEARCH_RADIUS)]
             df_validations_user = df_validations_user[(df_validations_user['LONGITUDE'] >= user_pos['lon'] - SEARCH_RADIUS) & (df_validations_user['LONGITUDE'] <= user_pos['lon'] + SEARCH_RADIUS)]
 
-            df_validations_user['distance'] = df_validations_user['distance'].apply(lambda x: geopy.distance.distance((x['LATITUDE'], x['LONGITUDE']), (user_pos['lat'], user_pos['lon'])).m, axis=1)
+            df_validations_user['distance'] = df_validations_user.apply(lambda x: geopy.distance.distance((x['LATITUDE'], x['LONGITUDE']), (user_pos['lat'], user_pos['lon'])).m, axis=1)
             df_validations_user = df_validations_user.drop_duplicates(subset=['LIBELLE_ARRET'])
             df_validations_user = df_validations_user.sort_values('distance', ascending=True).head(5)
 
             # Keep only values within ±SEARCH_RADIUS latitude/longitude
             df_realtime_velib = df_realtime_velib[(df_realtime_velib['latitude'] >= user_pos['lat'] - SEARCH_RADIUS) & (df_realtime_velib['latitude'] <= user_pos['lat'] + SEARCH_RADIUS)]
             df_realtime_velib = df_realtime_velib[(df_realtime_velib['longitude'] >= user_pos['lon'] - SEARCH_RADIUS) & (df_realtime_velib['longitude'] <= user_pos['lon'] + SEARCH_RADIUS)]
-
-            df_realtime_velib['distance'] = df_realtime_velib['distance'].apply(lambda x: geopy.distance.distance((x['latitude'], x['longitude']), (user_pos['lat'], user_pos['lon'])).m, axis=1)
+            df_realtime_velib['distance'] = df_realtime_velib.apply(lambda x: geopy.distance.distance((x['latitude'], x['longitude']), (user_pos['lat'], user_pos['lon'])).m, axis=1)
             df_realtime_velib = df_realtime_velib.sort_values('distance', ascending=True).head(5)
 
         poi_user = {

@@ -53,13 +53,31 @@ st.button("Rechercher", on_click=lambda: get_position(user_address, zipcode))
 if st.session_state.user_pos:
     st.write(f"Votre position: {st.session_state.user_pos['formatted']}")
 
+    # df_validations_user = df_validations.copy()
+    # df_validations_user['distance'] = df_validations_user.apply(lambda x: geopy.distance.distance((x['LATITUDE'], x['LONGITUDE']), (st.session_state.user_pos['lat'], st.session_state.user_pos['lon'])).m, axis=1)
+    # df_validations_user = df_validations_user.drop_duplicates(subset=['LIBELLE_ARRET'])
+    # df_validations_user = df_validations_user.sort_values('distance', ascending=True).head(5)
+
+    # df_realtime_velib['distance'] = df_realtime_velib.apply(lambda x: geopy.distance.distance((x['latitude'], x['longitude']), (st.session_state.user_pos['lat'], st.session_state.user_pos['lon'])).m, axis=1)
+    # df_realtime_velib = df_realtime_velib.sort_values('distance', ascending=True).head(5)
+    SEARCH_RADIUS = 0.005
+
     df_validations_user = df_validations.copy()
+    # Keep only values within ±SEARCH_RADIUS latitude/longitude
+    df_validations_user = df_validations_user[(df_validations_user['LATITUDE'] >= st.session_state.user_pos['lat'] - SEARCH_RADIUS) & (df_validations_user['LATITUDE'] <= st.session_state.user_pos['lat'] + SEARCH_RADIUS)]
+    df_validations_user = df_validations_user[(df_validations_user['LONGITUDE'] >= st.session_state.user_pos['lon'] - SEARCH_RADIUS) & (df_validations_user['LONGITUDE'] <= st.session_state.user_pos['lon'] + SEARCH_RADIUS)]
+
     df_validations_user['distance'] = df_validations_user.apply(lambda x: geopy.distance.distance((x['LATITUDE'], x['LONGITUDE']), (st.session_state.user_pos['lat'], st.session_state.user_pos['lon'])).m, axis=1)
     df_validations_user = df_validations_user.drop_duplicates(subset=['LIBELLE_ARRET'])
     df_validations_user = df_validations_user.sort_values('distance', ascending=True).head(5)
 
+    # Keep only values within ±SEARCH_RADIUS latitude/longitude
+    df_realtime_velib = df_realtime_velib[(df_realtime_velib['latitude'] >= st.session_state.user_pos['lat'] - SEARCH_RADIUS) & (df_realtime_velib['latitude'] <= st.session_state.user_pos['lat'] + SEARCH_RADIUS)]
+    df_realtime_velib = df_realtime_velib[(df_realtime_velib['longitude'] >= st.session_state.user_pos['lon'] - SEARCH_RADIUS) & (df_realtime_velib['longitude'] <= st.session_state.user_pos['lon'] + SEARCH_RADIUS)]
+
     df_realtime_velib['distance'] = df_realtime_velib.apply(lambda x: geopy.distance.distance((x['latitude'], x['longitude']), (st.session_state.user_pos['lat'], st.session_state.user_pos['lon'])).m, axis=1)
     df_realtime_velib = df_realtime_velib.sort_values('distance', ascending=True).head(5)
+
 
     poi_user = {
         "latitude": st.session_state.user_pos['lat'],
