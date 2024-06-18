@@ -9,6 +9,6 @@ load_data_velib()
 if time.time() - before_load > 2:
     st.balloons()
 
-st.title('Transport statistics in Île-De-France')
+st.title('Statistiques et prédictions des transports d’Île-de-France')
 
 # st.set_page_config(layout="wide")
