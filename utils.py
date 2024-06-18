@@ -20,19 +20,23 @@ def load_data_velib():
     df['Filling ratio'] = df['Nombre total vélos disponibles'] / df['Capacité de la station']
     df['Filling ratio'] = df['Filling ratio'].apply(lambda x: min(x, 1))
 
-    # df_history = pd.read_csv('historique_stations.csv', names=['date', 'capacity', 'mechanical', 'ebike', 'station_name', 'position', 'unkown'])
-    # df_history['date'] = pd.to_datetime(df_history['date'])
-    # df_history['hour'] = df_history['date'].dt.hour
-    # df_history['day_of_week'] = df_history['date'].dt.dayofweek
-    # df_history['day_of_week'] = df_history['day_of_week'].map({0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'})
-    # df_history['bikes_available'] = df_history['mechanical'] + df_history['ebike']
-    # df_history['bikes_ratio'] = df_history['bikes_available'] / df_history['capacity']
-    # df_history['available_docks'] = df_history['capacity'] - df_history['bikes_available']
-
-    # df_history['less_than_3_bikes'] = (df_history['bikes_available'] <= 3).astype(int)
-    # df_history['less_than_3_docks'] = (df_history['available_docks'] <= 3).astype(int)
-
     return df
+
+@st.cache_data
+def load_data_velib_hist():
+    df_history = pd.read_csv('historique_stations.csv', names=['date', 'capacity', 'mechanical', 'ebike', 'station_name', 'position', 'unkown'])
+    df_history['date'] = pd.to_datetime(df_history['date'])
+    df_history['hour'] = df_history['date'].dt.hour
+    df_history['day_of_week'] = df_history['date'].dt.dayofweek
+    df_history['day_of_week'] = df_history['day_of_week'].map({0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'})
+    df_history['bikes_available'] = df_history['mechanical'] + df_history['ebike']
+    df_history['bikes_ratio'] = df_history['bikes_available'] / df_history['capacity']
+    df_history['available_docks'] = df_history['capacity'] - df_history['bikes_available']
+
+    df_history['less_than_3_bikes'] = (df_history['bikes_available'] <= 3).astype(int)
+    df_history['less_than_3_docks'] = (df_history['available_docks'] <= 3).astype(int)
+
+    return df_history
 
 def st_graph_title(name):
     st.markdown(f'#### <center style="margin-top: 50px">{name}</center>', unsafe_allow_html=True)
